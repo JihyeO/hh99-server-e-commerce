@@ -1,1 +1,1 @@
-Hanghae Plus Lite Backend Course Repository
+Server Building for E-Commerce Service
