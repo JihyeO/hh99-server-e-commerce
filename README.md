@@ -1,6 +1,6 @@
 ## Server Building for E-Commerce Service
 
-### Sequence Diagram
+### 1. Sequence Diagram
 
 1. 잔액 충전 또는 조회
 ```mermaid
@@ -138,6 +138,32 @@ sequenceDiagram
     API_Server --> Client: topProductsResponse
 ```
 
-### ERD
+### 2. ERD
 <img src="./design_erd.png" width="400"/>
 
+### 3. Infrastructure Diagram
+```mermaid
+graph TD
+  subgraph "Infrastructure"
+    User[사용자] -->|HTTP 요청| API_Server[API_Server]
+
+    subgraph Core Components
+      API_Server --> Redis[(Redis Cache)]
+      API_Server --> App_Service[Application Logic]
+      App_Service --> DB[(MySQL)]
+      App_Service --> Kafka["Kafka Producer"]
+    end
+
+    Kafka --> KafkaConsumer[Kafka Consumer]
+    KafkaConsumer --> DataPlatform[데이터 플랫폼]
+
+    subgraph Redis Use Cases
+      Redis -.-> BalanceCache[잔액 캐시]
+      Redis -.-> StockCache[상품 수량 캐시]
+      Redis -.-> CouponCounter[쿠폰 선착순 처리]
+    end
+  end
+
+  classDef infra fill:#D3D3D3,stroke:#333,stroke-width:1px,color:#000000;
+  class Kafka,KafkaConsumer,Redis infra;
+```
