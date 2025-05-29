@@ -75,7 +75,7 @@ sequenceDiagram
     Participant Balance_Service
     Participant Product_Service
     Participant Order_DB
-    Participant Balance_DB
+    Participant User_DB
     Participant Product_DB
     Participant External_Data_Platform
 
@@ -88,14 +88,14 @@ sequenceDiagram
     Product_Service --> Order_Service: totalPrice, stockStatus
 
     Order_Service -> Balance_Service: hasSufficientBalance(userId, totalPrice)
-    Balance_Service -> Balance_DB: getBalance(userId)
-    Balance_DB --> Balance_Service: balance
+    Balance_Service -> User_DB: getUserBalance(userId)
+    User_DB --> Balance_Service: balance
     Balance_Service --> Order_Service: true / false
 
     alt 잔액 충분
         Order_Service -> Balance_Service: deductBalance(userId, totalPrice)
-        Balance_Service -> Balance_DB: updateBalance()
-        Balance_DB --> Balance_Service: OK
+        Balance_Service -> User_DB: updateUserBalance(userId)
+        User_DB --> Balance_Service: OK
 
         Order_Service -> Product_Service: reduceStock(productList)
         Product_Service -> Product_DB: updateProduct()
