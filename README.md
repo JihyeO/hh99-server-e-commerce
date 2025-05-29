@@ -137,3 +137,7 @@ sequenceDiagram
     Product_Service --> API_Server: topProducts
     API_Server --> Client: topProductsResponse
 ```
+
+### ERD
+<img src="./design_erd.png" width="400"/>
+
