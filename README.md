@@ -1,8 +1,11 @@
 ## Server Building for E-Commerce Service
 
-### 1. Sequence Diagram
-
-1. 잔액 충전 또는 조회
+### Design Note
+<details>
+    <summary>1. Sequence Diagram</summary>
+<details>
+    <summary>1. 잔액 충전 또는 조회</summary>
+    
 ```mermaid
 sequenceDiagram
     actor Client
@@ -28,8 +31,11 @@ sequenceDiagram
     Balance_Service-->>API_Server: currentBalance
     API_Server-->>Client: 200 OK (잔액: currentBalance)
 ```
+</details>
 
-2. 상품 조회
+<details>
+    <summary>2. 상품 조회</summary>
+
 ```mermaid
 sequenceDiagram
     actor Client
@@ -44,8 +50,11 @@ sequenceDiagram
     Product_Service --> API_Server: List<Product>
     API_Server --> Client: 200 OK (상품 목록 반환)
 ```
-   
-3. 선착순 쿠폰 기능
+</details>
+
+<details>
+    <summary>3. 선착순 쿠폰 기능</summary>
+
 ```mermaid
 sequenceDiagram
     Participant Client
@@ -65,8 +74,11 @@ sequenceDiagram
     end
     API_Server --> Client: 결과 응답 (성공 or 실패) 
 ```
+</details>
 
-4. 주문 / 결제 기능
+<details>
+    <summary>4. 주문 / 결제 기능</summary>
+
 ```mermaid
 sequenceDiagram
     Actor Client
@@ -114,8 +126,11 @@ sequenceDiagram
 
     API_Server --> Client: 주문 결과 응답
 ```
+</details>
 
-5. 상위 상품 조회
+<details>
+    <summary>5. 상위 상품 조회</summary>
+
 ```mermaid
 sequenceDiagram
     Actor Client
@@ -137,11 +152,17 @@ sequenceDiagram
     Product_Service --> API_Server: topProducts
     API_Server --> Client: topProductsResponse
 ```
+</details>
+</details>
 
-### 2. ERD
+<details>
+    <summary>2. ERD</summary>
 <img src="./design_erd.png" width="400"/>
+</details>
 
-### 3. Infrastructure Diagram
+<details>
+    <summary>3. Infrastructure Diagram</summary>
+    
 ```mermaid
 graph TD
   subgraph "Infrastructure"
@@ -167,3 +188,4 @@ graph TD
   classDef infra fill:#D3D3D3,stroke:#333,stroke-width:1px,color:#000000;
   class Kafka,KafkaConsumer,Redis infra;
 ```
+</details>
