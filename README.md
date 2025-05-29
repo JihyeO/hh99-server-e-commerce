@@ -1,6 +1,6 @@
 ## Server Building for E-Commerce Service
 
-### Design Note
+### Design
 <details>
     <summary>1. Sequence Diagram</summary>
 <details>
