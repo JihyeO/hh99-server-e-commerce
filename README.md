@@ -1,6 +1,7 @@
 ## Server Building for E-Commerce Service
 
 ### Design
+
 <details>
     <summary>1. Sequence Diagram</summary>
 <details>
@@ -30,7 +31,8 @@ sequenceDiagram
     User_DB-->>Balance_Service: currentBalance
     Balance_Service-->>API_Server: currentBalance
     API_Server-->>Client: 200 OK (잔액: currentBalance)
-```
+
+````
 </details>
 
 <details>
@@ -49,7 +51,8 @@ sequenceDiagram
     Product_DB --> Product_Service: List<Product>
     Product_Service --> API_Server: List<Product>
     API_Server --> Client: 200 OK (상품 목록 반환)
-```
+````
+
 </details>
 
 <details>
@@ -61,7 +64,7 @@ sequenceDiagram
     Participant API_Server
     Participant Coupon_Service
     Participant Coupon_DB
-    
+
     Client -> API_Server: POST /issueCoupon (userId)
     API_Server -> Coupon_Service: issueCoupon(userId)
     Coupon_Service -> Coupon_DB: getCoupon()
@@ -72,8 +75,9 @@ sequenceDiagram
     else 발급 마감
         Coupon_Service --> API_Server: 쿠폰 소진 오류
     end
-    API_Server --> Client: 결과 응답 (성공 or 실패) 
+    API_Server --> Client: 결과 응답 (성공 or 실패)
 ```
+
 </details>
 
 <details>
@@ -126,6 +130,7 @@ sequenceDiagram
 
     API_Server --> Client: 주문 결과 응답
 ```
+
 </details>
 
 <details>
@@ -152,6 +157,7 @@ sequenceDiagram
     Product_Service --> API_Server: topProducts
     API_Server --> Client: topProductsResponse
 ```
+
 </details>
 </details>
 
@@ -179,13 +185,14 @@ graph TD
     KafkaConsumer --> DataPlatform[데이터 플랫폼]
 
     subgraph Redis Use Cases
-      Redis -.-> BalanceCache[잔액 캐시]
-      Redis -.-> StockCache[상품 수량 캐시]
-      Redis -.-> CouponCounter[쿠폰 선착순 처리]
+      Redis -.-> ProductCache[상품 조회 캐시]
     end
-  end
 
-  classDef infra fill:#D3D3D3,stroke:#333,stroke-width:1px,color:#000000;
-  class Kafka,KafkaConsumer,Redis infra;
+end
+
+classDef infra fill:#D3D3D3,stroke:#333,stroke-width:1px,color:#000000;
+class Kafka,KafkaConsumer,Redis infra;
+
 ```
 </details>
+```
