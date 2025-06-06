@@ -23,6 +23,14 @@ public class Product {
   @Column(nullable = false)
   private int quantity;
 
+  protected Product() {}
+
+  public Product(String name, BigDecimal price, int quantity) {
+    this.name = name;
+    this.price = price;
+    this.quantity = quantity;
+  }
+
   public Long getId() {
     return id;
   }
