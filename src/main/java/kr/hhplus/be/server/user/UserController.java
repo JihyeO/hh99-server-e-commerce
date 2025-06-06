@@ -16,7 +16,6 @@ public class UserController {
   }
 
   public record ChargeRequest(
-    Long userId,
     BigDecimal price
   ) {}
 
@@ -26,10 +25,7 @@ public class UserController {
   ) {}
 
   @PostMapping("/{id}/chargeBalance")
-  public ResponseEntity<ChargeResponse> chargeBalance(
-    @PathVariable Long id,
-    @RequestBody ChargeRequest request
-) {
+  public ResponseEntity<ChargeResponse> chargeBalance(@PathVariable Long id, @RequestBody ChargeRequest request) {
     BigDecimal updatedBalance = userService.chargeBalance(id, request.price());
     return ResponseEntity.ok(new ChargeResponse(id, updatedBalance));
   }

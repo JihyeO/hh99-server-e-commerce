@@ -2,8 +2,11 @@ package kr.hhplus.be.server.user;
 
 import java.math.BigDecimal;
 
+import org.springframework.stereotype.Service;
+
 import jakarta.transaction.Transactional;
 
+@Service
 public class UserService {
   private final UserRepository userRepository;
 
