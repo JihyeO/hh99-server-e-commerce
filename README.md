@@ -163,7 +163,7 @@ sequenceDiagram
 
 <details>
     <summary>2. ERD</summary>
-<img src="./design_erd.png" width="400"/>
+<img src="./docs/erd.png" width="400"/>
 </details>
 
 <details>
