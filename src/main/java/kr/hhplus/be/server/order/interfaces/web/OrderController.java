@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.web;
+package kr.hhplus.be.server.order.interfaces.web;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.hhplus.be.server.order.OrderItem;
-import kr.hhplus.be.server.usecase.PlaceOrderCommand;
-import kr.hhplus.be.server.usecase.PlaceOrderInput;
-import kr.hhplus.be.server.usecase.PlaceOrderOutput;
-import kr.hhplus.be.server.usecase.PlaceOrderResult;
+import kr.hhplus.be.server.order.usecase.PlaceOrderCommand;
+import kr.hhplus.be.server.order.usecase.PlaceOrderInput;
+import kr.hhplus.be.server.order.usecase.PlaceOrderOutput;
+import kr.hhplus.be.server.order.usecase.PlaceOrderResult;
 
 @RestController
 @RequestMapping("/order")

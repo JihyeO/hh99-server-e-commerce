@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.usecase;
+package kr.hhplus.be.server.order.usecase;
 
 import kr.hhplus.be.server.order.Order;
 import kr.hhplus.be.server.order.OrderRepository;

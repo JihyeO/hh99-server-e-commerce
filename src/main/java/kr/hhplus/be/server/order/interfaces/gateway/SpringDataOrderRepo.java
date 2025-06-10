@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.gateway;
+package kr.hhplus.be.server.order.interfaces.gateway;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.gateway;
+package kr.hhplus.be.server.order.interfaces.gateway;
 
 import kr.hhplus.be.server.order.Order;
 import kr.hhplus.be.server.order.OrderEntity;
