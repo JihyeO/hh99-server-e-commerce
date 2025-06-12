@@ -1,13 +1,13 @@
-package kr.hhplus.be.server.order.interfaces.gateway;
+package kr.hhplus.be.server.order.infrastructure;
 
 import kr.hhplus.be.server.order.Order;
 import kr.hhplus.be.server.order.OrderEntity;
 import kr.hhplus.be.server.order.OrderRepository;
 
-public class OrderJpaGateway implements OrderRepository {
-  private final SpringDataOrderRepo jpaRepo;
+public class OrderJpaRepositoryImpl implements OrderRepository {
+  private final OrderJpaRepository jpaRepo;
 
-  OrderJpaGateway(SpringDataOrderRepo jpaRepo) {
+  OrderJpaRepositoryImpl(OrderJpaRepository jpaRepo) {
     this.jpaRepo = jpaRepo;
   }
 
