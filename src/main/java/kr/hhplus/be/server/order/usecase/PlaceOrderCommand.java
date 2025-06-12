@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.usecase;
+package kr.hhplus.be.server.order.usecase;
 
 import java.time.LocalDateTime;
 import java.util.List;

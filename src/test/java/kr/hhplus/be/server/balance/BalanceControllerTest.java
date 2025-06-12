@@ -1,6 +1,7 @@
-package kr.hhplus.be.server.user;
+package kr.hhplus.be.server.balance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,15 +15,15 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class UserControllerTest {
+public class BalanceControllerTest {
   private MockMvc mockMvc;
-  private UserService userService;
+  private BalanceService balanceService;
   private ObjectMapper objectMapper;
 
   @BeforeEach
   void setUp() {
-    userService = Mockito.mock(UserService.class);
-    UserController userController = new UserController(userService);
+    balanceService = Mockito.mock(BalanceService.class);
+    BalanceController userController = new BalanceController(balanceService);
     mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     objectMapper = new ObjectMapper();
   }
@@ -33,11 +34,11 @@ public class UserControllerTest {
     BigDecimal chargeAmount = new BigDecimal("2000");
     BigDecimal updatedBalance = new BigDecimal("3000");
 
-    given(userService.chargeBalance(eq(userId), eq(chargeAmount))).willReturn(updatedBalance);
+    given(balanceService.chargeBalance(eq(userId), eq(chargeAmount))).willReturn(updatedBalance);
 
-    UserController.ChargeRequest request = new UserController.ChargeRequest(chargeAmount);
+    BalanceController.ChargeRequest request = new BalanceController.ChargeRequest(chargeAmount);
 
-    mockMvc.perform(post("/users/{id}/chargeBalance", userId)
+    mockMvc.perform(post("/balance/{id}/chargeBalance", userId)
         .contentType("application/json")
         .content(objectMapper.writeValueAsString(request)))
     .andExpect(status().isOk())

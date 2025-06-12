@@ -1,7 +1,11 @@
 package kr.hhplus.be.server.order;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
+import kr.hhplus.be.server.product.Product;
 
 public class Order {
   private Long id;
@@ -49,5 +53,13 @@ public class Order {
 
   public List<OrderItem> getItems() {
     return items;
+  }
+
+  public BigDecimal calculateTotalAmount(Map<Long, Product> productMap) {
+    BigDecimal results = new BigDecimal("0");
+    for (OrderItem item : items) {
+      results = results.add(item.getTotalPrice(productMap.get(item.getId())));
+    }
+    return results;
   }
 }
