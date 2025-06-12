@@ -2,12 +2,15 @@ package kr.hhplus.be.server.product.infrastructure;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import jakarta.persistence.EntityNotFoundException;
 import kr.hhplus.be.server.product.Product;
 import kr.hhplus.be.server.product.ProductReader;
 import kr.hhplus.be.server.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class ProductReaderImpl implements ProductReader {
   private final ProductRepository productRepository;

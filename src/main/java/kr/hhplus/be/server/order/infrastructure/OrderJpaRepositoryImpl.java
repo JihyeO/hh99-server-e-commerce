@@ -1,14 +1,29 @@
 package kr.hhplus.be.server.order.infrastructure;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import kr.hhplus.be.server.order.Order;
 import kr.hhplus.be.server.order.OrderEntity;
 import kr.hhplus.be.server.order.OrderRepository;
 
+@Repository
 public class OrderJpaRepositoryImpl implements OrderRepository {
-  private final OrderJpaRepository jpaRepo;
+  private final SpringOrderJpaRepository jpaRepo;
 
-  OrderJpaRepositoryImpl(OrderJpaRepository jpaRepo) {
+  public OrderJpaRepositoryImpl(SpringOrderJpaRepository jpaRepo) {
     this.jpaRepo = jpaRepo;
+  }
+
+  @Override
+  public List<Order> getAllOrders() {
+    List<Order> orders = new ArrayList<>();
+    for (OrderEntity orderEntity : jpaRepo.findAll()) {
+      orders.add(orderEntity.toDomain());
+    }
+    return orders;
   }
 
   @Override

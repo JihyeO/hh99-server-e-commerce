@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import kr.hhplus.be.server.balance.BalanceReader;
 import kr.hhplus.be.server.balance.exception.InsufficientBalanceException;
 import kr.hhplus.be.server.order.Order;
@@ -14,25 +16,24 @@ import kr.hhplus.be.server.product.Product;
 import kr.hhplus.be.server.product.ProductReader;
 import kr.hhplus.be.server.product.exception.InsufficientProductException;
 
+@Service
 public class PlaceOrderInteractor implements PlaceOrderInput {
   private final OrderRepository orderRepository;
   private final BalanceReader balanceReader;
   private final ProductReader productReader;
-  private final PlaceOrderOutput presenter;
 
   public PlaceOrderInteractor(
     OrderRepository orderRepository, 
     BalanceReader balanceReader, 
-    ProductReader productReader,
-    PlaceOrderOutput presenter) {
+    ProductReader productReader
+    ) {
     this.orderRepository = orderRepository;
     this.balanceReader = balanceReader;
     this.productReader = productReader;
-    this.presenter = presenter;
   }
 
   @Override
-  public void place(PlaceOrderCommand c) {
+  public PlaceOrderResult place(PlaceOrderCommand c) {
     Order order = Order.create(c.userId(), c.userCouponId(), c.status(), c.orderDate(), c.items());
     
     // 재고 차감
@@ -44,7 +45,8 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
       }
     }
     
-    // 총 금액 계산
+    // 총 금액 계산 및 잔액 차감
+    // todo: 쿠폰 적용
     Map<Long, Product> productMap = productReader.findAllById(
       order.getItems().stream().map(OrderItem::getProductId).toList()
     ).stream().collect(Collectors.toMap(Product::getId, Function.identity()));
@@ -57,6 +59,6 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
   
     Order saved = orderRepository.save(order);
 
-    presenter.ok(new PlaceOrderResult(saved.getId()));
+    return new PlaceOrderResult(saved.getId());
   }
 }

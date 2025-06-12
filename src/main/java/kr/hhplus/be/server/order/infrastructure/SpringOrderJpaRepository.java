@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.hhplus.be.server.order.OrderEntity;
 
-public interface OrderJpaRepository extends JpaRepository<OrderEntity, Long> {
+public interface SpringOrderJpaRepository extends JpaRepository<OrderEntity, Long> {
 }

@@ -2,12 +2,15 @@ package kr.hhplus.be.server.balance.infrastructure;
 
 import java.math.BigDecimal;
 
+import org.springframework.stereotype.Component;
+
 import kr.hhplus.be.server.balance.BalanceReader;
 import kr.hhplus.be.server.balance.BalanceRepository;
 import kr.hhplus.be.server.user.User;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Component
 public class BalanceReaderImpl implements BalanceReader {
   private final BalanceRepository balanceRepository;
 
