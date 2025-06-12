@@ -1,5 +1,9 @@
 package kr.hhplus.be.server.order;
 
+import java.math.BigDecimal;
+
+import kr.hhplus.be.server.product.Product;
+
 public class OrderItem {
   private Long id;
   private final Long orderId;
@@ -30,5 +34,9 @@ public class OrderItem {
 
   public int getQuantity() {
     return quantity;
+  }
+
+  public BigDecimal getTotalPrice(Product product) {
+    return product.getPrice().multiply(BigDecimal.valueOf(quantity));
   }
 }
