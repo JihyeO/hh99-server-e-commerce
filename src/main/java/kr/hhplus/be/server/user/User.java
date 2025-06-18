@@ -36,14 +36,17 @@ public class User {
       return balance;
   }
 
-  public void chargeBalance(BigDecimal price) {
-    if (balance.compareTo(BigDecimal.ZERO) < 0) {
+  public void chargeBalance(BigDecimal amount) {
+    if (amount == null) {
+      throw new IllegalArgumentException("충전금액 객체가 null 입니다.");
+    }
+    if (amount.compareTo(BigDecimal.ZERO) < 0) {
       throw new IllegalArgumentException("충전금액은 0보다 커야 합니다.");
     }
-    this.balance = this.balance.add(price);
+    this.balance = this.balance.add(amount);
   }
 
-  public void deductBalance(BigDecimal price) {
-    this.balance = this.balance.subtract(price);
+  public void deductBalance(BigDecimal amount) {
+    this.balance = this.balance.subtract(amount);
   }
 }

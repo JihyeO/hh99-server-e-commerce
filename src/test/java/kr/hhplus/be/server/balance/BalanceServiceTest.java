@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.user;
+package kr.hhplus.be.server.balance;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -10,16 +10,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import kr.hhplus.be.server.user.User;
+
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+public class BalanceServiceTest {
   @Mock
-  private UserRepository userRepository;
+  private BalanceRepository balanceRepository;
 
   @InjectMocks
-  private UserService userService;
+  private BalanceService balanceService;
 
   @Test
   public void chargeBalance() throws Exception {
@@ -28,8 +30,8 @@ public class UserServiceTest {
     idField.setAccessible(true);
     idField.set(mockUser, 1L);
 
-    when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
-    BigDecimal result = userService.chargeBalance(1L, new BigDecimal("2000"));
+    when(balanceRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+    BigDecimal result = balanceService.chargeBalance(1L, new BigDecimal("2000"));
     assertThat(result).isEqualTo(new BigDecimal("3000"));    
   }
 }
