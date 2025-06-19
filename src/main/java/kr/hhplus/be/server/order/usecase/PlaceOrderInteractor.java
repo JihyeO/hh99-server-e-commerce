@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.balance.BalanceReader;
 import kr.hhplus.be.server.balance.exception.InsufficientBalanceException;
 import kr.hhplus.be.server.order.Order;
@@ -17,6 +18,7 @@ import kr.hhplus.be.server.product.ProductReader;
 import kr.hhplus.be.server.product.exception.InsufficientProductException;
 
 @Service
+@Transactional
 public class PlaceOrderInteractor implements PlaceOrderInput {
   private final OrderRepository orderRepository;
   private final BalanceReader balanceReader;

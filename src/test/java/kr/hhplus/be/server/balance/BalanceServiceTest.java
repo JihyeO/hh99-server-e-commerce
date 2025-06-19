@@ -30,7 +30,7 @@ public class BalanceServiceTest {
     idField.setAccessible(true);
     idField.set(mockUser, 1L);
 
-    when(balanceRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+    when(balanceRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(mockUser));
     BigDecimal result = balanceService.chargeBalance(1L, new BigDecimal("2000"));
     assertThat(result).isEqualTo(new BigDecimal("3000"));    
   }
