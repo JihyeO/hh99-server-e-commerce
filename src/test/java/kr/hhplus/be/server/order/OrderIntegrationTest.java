@@ -21,6 +21,7 @@ import kr.hhplus.be.server.user.UserRepository;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.math.BigDecimal;
 
@@ -90,6 +91,7 @@ public class OrderIntegrationTest {
         mockMvc.perform(post("/order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").exists());
 

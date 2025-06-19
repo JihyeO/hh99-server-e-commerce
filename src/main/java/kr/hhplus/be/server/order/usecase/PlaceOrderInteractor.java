@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.order.usecase;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import kr.hhplus.be.server.order.OrderRepository;
 import kr.hhplus.be.server.product.Product;
 import kr.hhplus.be.server.product.ProductReader;
 import kr.hhplus.be.server.product.exception.InsufficientProductException;
+import kr.hhplus.be.server.user.User;
 
 @Service
 @Transactional
@@ -37,30 +39,37 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
   @Override
   public PlaceOrderResult place(PlaceOrderCommand c) {
     Order order = Order.create(c.userId(), c.userCouponId(), c.status(), c.orderDate(), c.items());
+    List<Long> productIds = order.getItems().stream()
+      .map(OrderItem::getProductId)
+      .toList();
+
+    // 총 금액 계산
+    Map<Long, Product> lockedProductMap = productReader
+      .findAllByIdForUpdate(productIds).stream()
+      .collect(Collectors.toMap(Product::getId, Function.identity()));
+    BigDecimal totalPrice = order.calculateTotalAmount(lockedProductMap);
+
+    // 잔액 차감
+    // todo: 쿠폰 적용
+    User user = balanceReader.findByIdForUpdate(c.userId());
+    if (user.getBalance().compareTo(totalPrice) < 0) {
+      throw new InsufficientBalanceException("잔액이 부족합니다.");
+    }
+    balanceReader.deductBalance(user.getId(), totalPrice);
     
     // 재고 차감
     for (OrderItem orderItem : c.items()) {
-      if (!productReader.hasEnoughProduct(orderItem.getProductId(), orderItem.getQuantity())) {
+      Product product = lockedProductMap.get(orderItem.getProductId());
+      if (product == null) {
+            throw new IllegalStateException("상품이 존재하지 않습니다: " + orderItem.getProductId());
+        }
+      if (product.getQuantity() < orderItem.getQuantity()) {
         throw new InsufficientProductException("재고가 부족합니다.");
-      } else {
-        productReader.deductProduct(orderItem.getProductId(), orderItem.getQuantity());
       }
+      productReader.deductProduct(product.getId(), orderItem.getQuantity());
     }
     
-    // 총 금액 계산 및 잔액 차감
-    // todo: 쿠폰 적용
-    Map<Long, Product> productMap = productReader.findAllById(
-      order.getItems().stream().map(OrderItem::getProductId).toList()
-    ).stream().collect(Collectors.toMap(Product::getId, Function.identity()));
-    BigDecimal totalPrice = order.calculateTotalAmount(productMap);
-    if (!balanceReader.hasEnoughBalance(c.userId(), totalPrice)) {
-      throw new InsufficientBalanceException("잔액이 부족합니다.");
-    } else {
-      balanceReader.deductBalance(c.userId(), totalPrice);
-    }
-  
     Order saved = orderRepository.save(order);
-
     return new PlaceOrderResult(saved.getId());
   }
 }
