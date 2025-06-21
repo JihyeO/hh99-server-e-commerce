@@ -15,6 +15,12 @@ public class BalanceReaderImpl implements BalanceReader {
   private final BalanceRepository balanceRepository;
 
   @Override
+  public User findByIdForUpdate(Long userId) {
+    return balanceRepository.findByIdForUpdate(userId)
+    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+  }
+
+  @Override
   public BigDecimal getBalance(Long userId) {
     User user = balanceRepository.findById(userId)
     .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
@@ -29,7 +35,7 @@ public class BalanceReaderImpl implements BalanceReader {
 
   @Override
   public void deductBalance(Long userId, BigDecimal amount) {
-    User user = balanceRepository.findById(userId)
+    User user = balanceRepository.findByIdForUpdate(userId)
     .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
     user.deductBalance(amount);

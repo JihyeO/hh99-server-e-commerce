@@ -19,9 +19,13 @@ public class ProductReaderImpl implements ProductReader {
     return productRepository.findAllById(ids);
   }
 
+  public List<Product> findAllByIdForUpdate(List<Long> ids) {
+    return productRepository.findAllByIdForUpdate(ids);
+  }
+
   public boolean hasEnoughProduct(Long productId, int orderQuantity) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
+      .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
 
     int newQuantity = product.getQuantity() - orderQuantity;
     return newQuantity < 0;
@@ -29,7 +33,7 @@ public class ProductReaderImpl implements ProductReader {
 
   public void deductProduct(Long productId, int orderQuantity) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
+      .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
 
     int newQuantity = product.getQuantity() - orderQuantity;
     if (newQuantity < 0) {
