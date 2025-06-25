@@ -1,8 +1,5 @@
 package kr.hhplus.be.server.product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-
 import java.math.BigDecimal;
 
 import jakarta.persistence.*;

@@ -15,6 +15,15 @@ public class Order {
   private final LocalDateTime orderDate;
   private final List<OrderItem> items;
 
+  public Order(Long id, Long userId, Long userCouponId, String status, LocalDateTime orderDate, List<OrderItem> items) {
+    this.id = id;
+    this.userId = userId;
+    this.userCouponId = userCouponId;
+    this.status = status;
+    this.orderDate = orderDate;
+    this.items = items;
+  }
+
   public Order(Long userId, Long userCouponId, String status, LocalDateTime orderDate, List<OrderItem> items) {
     this.userId = userId;
     this.userCouponId = userCouponId;
@@ -56,10 +65,16 @@ public class Order {
   }
 
   public BigDecimal calculateTotalAmount(Map<Long, Product> productMap) {
-    BigDecimal results = new BigDecimal("0");
-    for (OrderItem item : items) {
-      results = results.add(item.getTotalPrice(productMap.get(item.getId())));
-    }
-    return results;
+    return this.items.stream()
+      .map(item -> {
+        Product product = productMap.get(item.getProductId());
+        if (product == null) {
+            throw new IllegalArgumentException(
+                "상품 정보를 찾을 수 없습니다: productId=" + item.getProductId()
+            );
+        }
+        return product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+      })
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }
