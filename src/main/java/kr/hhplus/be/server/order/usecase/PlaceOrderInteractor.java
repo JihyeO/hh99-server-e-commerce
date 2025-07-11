@@ -78,7 +78,7 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
     Order saved = orderRepository.save(order);
 
     // 주문 생성 이벤트 발행
-    eventPublisher.publishEvent(new OrderCreatedEvent(saved.getId(), c.userId(), c.status()));
+    eventPublisher.publishEvent(new OrderCreatedEvent(saved.getId(), saved.getUserId(), saved.getStatus()));
     return new PlaceOrderResult(saved.getId());
   }
 }
