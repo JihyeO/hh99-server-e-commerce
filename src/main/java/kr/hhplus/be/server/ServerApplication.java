@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {
     "kr.hhplus.be.server.user",
     "kr.hhplus.be.server.balance",
+    "kr.hhplus.be.server.coupon",
+    "kr.hhplus.be.server.usercoupon",
     "kr.hhplus.be.server.order",
     "kr.hhplus.be.server.product"
 })

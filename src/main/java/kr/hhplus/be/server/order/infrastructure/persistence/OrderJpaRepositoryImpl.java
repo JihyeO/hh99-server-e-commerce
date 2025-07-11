@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order.infrastructure;
+package kr.hhplus.be.server.order.infrastructure.persistence;
 
 import java.util.ArrayList;
 import java.util.List;

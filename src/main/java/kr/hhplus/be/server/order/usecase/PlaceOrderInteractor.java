@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -14,6 +15,7 @@ import kr.hhplus.be.server.balance.exception.InsufficientBalanceException;
 import kr.hhplus.be.server.order.Order;
 import kr.hhplus.be.server.order.OrderItem;
 import kr.hhplus.be.server.order.OrderRepository;
+import kr.hhplus.be.server.order.event.OrderCreatedEvent;
 import kr.hhplus.be.server.product.Product;
 import kr.hhplus.be.server.product.ProductReader;
 import kr.hhplus.be.server.product.exception.InsufficientProductException;
@@ -25,15 +27,18 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
   private final OrderRepository orderRepository;
   private final BalanceReader balanceReader;
   private final ProductReader productReader;
+  private final ApplicationEventPublisher eventPublisher;
 
   public PlaceOrderInteractor(
     OrderRepository orderRepository, 
     BalanceReader balanceReader, 
-    ProductReader productReader
+    ProductReader productReader,
+    ApplicationEventPublisher eventPublisher
     ) {
     this.orderRepository = orderRepository;
     this.balanceReader = balanceReader;
     this.productReader = productReader;
+    this.eventPublisher = eventPublisher;
   }
 
   @Override
@@ -69,7 +74,11 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
       productReader.deductProduct(product.getId(), orderItem.getQuantity());
     }
     
+    // 주문 저장
     Order saved = orderRepository.save(order);
+
+    // 주문 생성 이벤트 발행
+    eventPublisher.publishEvent(new OrderCreatedEvent(saved.getId(), saved.getUserId(), saved.getStatus()));
     return new PlaceOrderResult(saved.getId());
   }
 }
