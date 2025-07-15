@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.order.infrastructure;
+package kr.hhplus.be.server.order.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
