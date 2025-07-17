@@ -6,8 +6,12 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.context.ApplicationEventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.balance.BalanceReader;
@@ -16,6 +20,7 @@ import kr.hhplus.be.server.order.Order;
 import kr.hhplus.be.server.order.OrderItem;
 import kr.hhplus.be.server.order.OrderRepository;
 import kr.hhplus.be.server.order.event.OrderCreatedEvent;
+import kr.hhplus.be.server.order.usecase.kafka.OrderKafkaProducer;
 import kr.hhplus.be.server.product.Product;
 import kr.hhplus.be.server.product.ProductReader;
 import kr.hhplus.be.server.product.exception.InsufficientProductException;
@@ -24,21 +29,22 @@ import kr.hhplus.be.server.user.User;
 @Service
 @Transactional
 public class PlaceOrderInteractor implements PlaceOrderInput {
+  private static final Logger logger = LoggerFactory.getLogger(PlaceOrderInteractor.class);
   private final OrderRepository orderRepository;
   private final BalanceReader balanceReader;
   private final ProductReader productReader;
-  private final ApplicationEventPublisher eventPublisher;
+  private final OrderKafkaProducer orderKafkaProducer;
 
   public PlaceOrderInteractor(
     OrderRepository orderRepository, 
     BalanceReader balanceReader, 
     ProductReader productReader,
-    ApplicationEventPublisher eventPublisher
+    OrderKafkaProducer orderKafkaProducer
     ) {
     this.orderRepository = orderRepository;
     this.balanceReader = balanceReader;
     this.productReader = productReader;
-    this.eventPublisher = eventPublisher;
+    this.orderKafkaProducer = orderKafkaProducer;
   }
 
   @Override
@@ -77,8 +83,14 @@ public class PlaceOrderInteractor implements PlaceOrderInput {
     // 주문 저장
     Order saved = orderRepository.save(order);
 
-    // 주문 생성 이벤트 발행
-    eventPublisher.publishEvent(new OrderCreatedEvent(saved.getId(), saved.getUserId(), saved.getStatus()));
+    // 주문 생성 이벤트 전송
+    OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(saved.getId(), saved.getUserId(), saved.getStatus());
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      orderKafkaProducer.sendOrderMessage("order-created", objectMapper.writeValueAsString(orderCreatedEvent));
+    } catch (JsonProcessingException e) {
+      logger.error("OrderCreatedEvent 직렬화 실패: {}", e.getMessage(), e);
+    }
     return new PlaceOrderResult(saved.getId());
   }
 }
